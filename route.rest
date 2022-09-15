@@ -1,0 +1,27 @@
+## REGISTER USER
+POST {{Hostname}}/v1/register
+Content-Type: application/json
+
+{
+    "email": "test@example.com",
+    "password": "Test123#"
+}
+
+### LOGIN
+
+POST {{Hostname}}/v1/login
+Content-Type: application/json
+
+{
+    "email": "test@example.com",
+    "password": "Test123#"
+}
+
+### TOKEN
+
+POST {{Hostname}}/v1/token
+Authorization: Bearer {{refreshToken}}
+
+### LOGOUT 
+POST {{Hostname}}/v1/logout
+Authorization: Bearer {{accessToken}}

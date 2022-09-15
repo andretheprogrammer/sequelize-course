@@ -1,0 +1,12 @@
+{
+    "rest-client.environmentVariables": {
+
+        "$shared": {
+            "my-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20iLCJpYXQiOjE2NjI3NTc1MjV9.zxrt9JdlR4DZfSObZZLvWjajJofjPaZUvGoWxWceEfo"
+        }
+    },
+    "Local Env": {
+        "my-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20iLCJpYXQiOjE2NjI3NTc1MjV9.zxrt9JdlR4DZfSObZZLvWjajJofjPaZUvGoWxWceEfo"
+    },
+
+}

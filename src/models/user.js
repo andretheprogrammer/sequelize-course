@@ -7,44 +7,43 @@ export default (sequelize) => {
     static associate(models) {
       User.RefreshToken = User.hasOne(models.RefreshToken);
       User.Roles = User.hasMany(models.Role);
-    };
+    }
 
     static async hashPassword(password) {
       return bcrypt.hash(password, environment.saltRounds);
-    };
-
-    static async createNewUser({
-        email,
-        password,
-        roles,
-        username,
-        firstName,
-        lastName,
-        refreshToken,
-      }) {
-        return sequelize.transaction(() => {
-          let rolesToSave = [];
-  
-          if (roles && Array.isArray(roles)) {
-            rolesToSave = roles.map((role) => ({ role }));
-          }
-  
-          await User.create(
-            {
-              email,
-              password,
-              username,
-              firstName,
-              lastName,
-              RefreshToken: { token: refreshToken },
-              Roles: rolesToSave,
-            },
-            { include: [User.RefreshToken, User.Roles] }
-          );
-        });
-      }
     }
 
+    static async createNewUser({
+      email,
+      password,
+      roles,
+      username,
+      firstName,
+      lastName,
+      refreshToken,
+    }) {
+      return sequelize.transaction(() => {
+        let rolesToSave = [];
+
+        if (roles && Array.isArray(roles)) {
+          rolesToSave = roles.map((role) => ({ role }));
+        }
+
+        return User.create(
+          {
+            email,
+            password,
+            username,
+            firstName,
+            lastName,
+            RefreshToken: { token: refreshToken },
+            Roles: rolesToSave,
+          },
+          { include: [User.RefreshToken, User.Roles] }
+        );
+      });
+    }
+  }
 
   User.init(
     {
@@ -54,11 +53,18 @@ export default (sequelize) => {
         unique: true,
         validate: {
           isEmail: {
-            msg: 'Not a valid email adress',
+            msg: 'Not a valid email address',
+          },
+          notNull: {
+            msg: 'Email is required',
           },
         },
       },
       password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      username: {
         type: DataTypes.STRING(50),
         unique: true,
         validate: {
@@ -105,8 +111,14 @@ export default (sequelize) => {
   };
 
   User.beforeSave(async (user, options) => {
-    const hashedPassword = await User.hashPassword(user.password);
-    user.password = hashedPassword;
+    if (user.password) {
+      const hashedPassword = await User.hashPassword(user.password);
+      user.password = hashedPassword;
+    }
+  });
+
+  User.afterCreate((user, options) => {
+    delete user.dataValues.password;
   });
 
   return User;
